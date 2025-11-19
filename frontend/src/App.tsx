@@ -17,7 +17,7 @@ export default function App() {
     let reconectTimer: any = null
     function connect() {
       if (!window?.WebSocket) {
-        throw new Error('Window webscoket not defined');
+        throw new Error('Window websocket not defined');
       }
       try {
         ws = new window.WebSocket(VITE_WS_URL);
@@ -31,9 +31,10 @@ export default function App() {
       }
       ws.onmessage = (e: any) => {
         try {
-          const msg = JSON.parse(e.data);
+          const msg = JSON.parse(e?.data);
           if (msg?.type === "metrics") setMetric(msg.data)
           else if (msg?.type === "config") {
+            console.log(msg);
             useMetricsStore.getState().setServices(
               msg.data?.services || []
             );
@@ -45,8 +46,8 @@ export default function App() {
     }
     connect();
     return () => {
-      if(ws) ws.close()
-      if(reconectTimer) clearTimeout(reconectTimer)
+      // if (ws) ws.close()
+      if (reconectTimer) clearTimeout(reconectTimer)
       clear()
     };
   }, [setMetric, clear])

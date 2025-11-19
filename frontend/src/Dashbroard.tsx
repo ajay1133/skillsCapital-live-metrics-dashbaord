@@ -7,22 +7,22 @@ const {
   VITE_BACKEND_BASE_URL = 'http://localhost:3000'
 } = (import.meta as any)?.env || {};
 
-export default function Dashbroard({connected}:any) {
-  const metrics = useMetricsStore((s)=>s.metrics)
-  const services = useMetricsStore((s)=>s.services)
+export default function Dashbroard({connected}: any) {
+  const metrics = useMetricsStore((s: any) => s?.metrics)
+  const services = useMetricsStore((s: any) => s?.services)
   const [selected,setSelected] = useState<string|null>(null)
 
-  const handleAdd = useCallback(async ()=>{
+  const handleAdd = useCallback(()=>{
     try {
-      await fetch(`${VITE_BACKEND_BASE_URL}/config?n=${services.length + 1}`);
+      fetch(`${VITE_BACKEND_BASE_URL}/config?n=${services.length + 1}`);
     } catch (e) {
       console.error(e);
     }  
   },[services.length])
-  const handleRemove = useCallback(async ()=>{
+  const handleRemove = useCallback(()=>{
     if (services.length > 1) {
       try {
-        await fetch(`${VITE_BACKEND_BASE_URL}/config?n=${services.length - 1}`);
+        fetch(`${VITE_BACKEND_BASE_URL}/config?n=${services.length - 1}`);
       } catch (e) {
         console.error(e);
       }  

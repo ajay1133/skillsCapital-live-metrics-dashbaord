@@ -68,6 +68,8 @@ wss.on('connection',(ws: WebSocket)=>{
         'Websocket client disconnected, clients size =', wss.clients.size
     )
   })
+
+  ws.on('error', (err) => console.error('Websocket error =', err))
 })
 
 function sendMetrics(ws: WebSocket, active: boolean) {
