@@ -41,7 +41,7 @@ app.get('/config',(req, res)=>{
   res.status(200).json(cfg)
   const msg = JSON.stringify({type:'config',data:cfg})
   wss.clients.forEach((client)=>{
-    if (client.readyState === client.OPEN) client.send(msg);
+    if (client.readyState === WebSocket.OPEN) client.send(msg);
   })
 })
 
@@ -71,11 +71,13 @@ wss.on('connection',(ws: WebSocket)=>{
 })
 
 function sendMetrics(ws: WebSocket, active: boolean) {
-    if (!active) return;
-    ws.send(JSON.stringify(
-        {type:'metrics',data:getServicesMetrics()}
-    ))
-    setTimeout(sendMetrics, METRIC_INTERVEAL_MS)
+  if (!active) return;
+  // only send if socket is still open
+  if (ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ type: 'metrics', data: getServicesMetrics() }))
+  }
+  // schedule next send using a closure so ws and active are passed correctly
+  setTimeout(() => sendMetrics(ws, active), METRIC_INTERVEAL_MS)
 }
 
 const port = Number(process.env.PORT) || 3000
