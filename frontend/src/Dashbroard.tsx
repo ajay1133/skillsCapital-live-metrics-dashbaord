@@ -3,17 +3,19 @@ import {useMetricsStore} from './store'
 import SrvcCard from './SrvcCard'
 import SrvcModal from './SrvcModal'
 
+const BACKEND_URL = (import.meta as any).env?.VITE_BACKEND_URL || 'http://localhost:3000'
+
 export default function Dashbroard({connected}:any) {
   const metrics = useMetricsStore((s)=>s.metrics)
   const services = useMetricsStore((s)=>s.services)
   const [selected,setSelected] = useState<string|null>(null)
 
   const handleAdd = useCallback(()=>{
-    fetch(`http://127.0.0.1:3000/config?n=${services.length + 1}`);
+    fetch(`${BACKEND_URL}/config?n=${services.length + 1}`);
   },[services.length])
   const handleRemove = useCallback(()=>{
     if (services.length > 1) {
-      fetch(`http://127.0.0.1:3000/config?n=${services.length - 1}`)
+      fetch(`${BACKEND_URL}/config?n=${services.length - 1}`)
     }
   },[services.length])
 

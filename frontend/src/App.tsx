@@ -2,7 +2,8 @@ import {useEffect, useState } from 'react';
 import {useMetricsStore } from './store'
 import Dashboard from './Dashbroard'
 
-const WS_URL = 'ws://127.0.0.1:3000/metrics/stream'
+const BACKEND_URL = (import.meta as any).env?.VITE_BACKEND_URL || 'http://localhost:3000'
+const WS_URL = `${BACKEND_URL.replace(/^http/, 'ws')}/metrics/stream`
 
 export default function App() {
   const setMetric = useMetricsStore((s) => s.setMetric)
