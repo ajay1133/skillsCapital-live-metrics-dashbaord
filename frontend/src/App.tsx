@@ -2,11 +2,10 @@ import {useEffect, useState } from 'react'
 import {useMetricsStore } from './store'
 import Dashboard from './Dashbroard'
 
-const { 
-  VITE_WS_BASE_URL = 'ws://localhost:3000'
-} = (import.meta as any)?.env || {};
+const env = (import.meta as any)?.env || {};
+const VITE_WS_BASE_URL = (env.VITE_WS_BASE_URL || 'ws://localhost:3000').replace(/\/$/, '');
 const VITE_WS_URL = `${VITE_WS_BASE_URL}/metrics/stream`;
-
+console.log('VITE_WS_BASE_URL=', VITE_WS_BASE_URL)
 export default function App() {
   const setMetric = useMetricsStore((s: any) => s.setMetric)
   const clear = useMetricsStore((s: any) => s.clear)
@@ -46,7 +45,7 @@ export default function App() {
     }
     connect();
     return () => {
-      // if (ws) ws.close()
+      try { if (ws) ws.close(); } catch (e) { /* ignore */ }
       if (reconectTimer) clearTimeout(reconectTimer)
       clear()
     };
