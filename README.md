@@ -27,14 +27,13 @@ A fullstack TypeScrpt web app for real-time monitoring of simulated backend serv
 ## Backend, do following commands
 1. cd backend
 2. npm install
-3. node dist/index.js
+3. npm run dev
 
 ## Frontend
 1. cd frontend
 2. npm install
 3. Copy frontend/.env.example to .env and update BACKEND_BASE_IRL & WS_BASE_URL, on localhost & by default they point to `http://localhost:3000` & `ws://localhost:3000` respectively. You can also change PORT in server & update here accordingly. 
-4. npm run build
-5. npm run dev
+4. npm run dev
 
 ## Docker
 Build and run: `docker build -t live-metrics-dashboard <Absolute-Path-To-APP> && docker run -p 3000:3000 -p 5173:5173 live-metrics-dashboard`
