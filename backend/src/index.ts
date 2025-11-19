@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import {WebSocketServer, WebSocket} from 'ws'
 import http from 'http'
+import os from 'os'
 
 const METRIC_INTERVEAL_MS = 1000
 let serviceCount = 5;
@@ -84,6 +85,15 @@ function sendMetrics(ws: WebSocket, active: boolean) {
 }
 
 const port = Number(process.env.PORT) || 3000
-server.listen(port,'127.0.0.1', () => {
+// Listen on all interfaces so the app is reachable from external hosts (e.g., Render)
+server.listen(port, '0.0.0.0', () => {
+  const addr = server.address();
   console.log(`BackEnd listening on port: ${port}`)
+  console.log('server.address() =', addr)
+  console.log('process.env.PORT =', process.env.PORT)
+  try {
+    console.log('sample network interfaces =', Object.keys(os.networkInterfaces()).join(', '))
+  } catch (e) {
+    console.warn('could not read network interfaces', e)
+  }
 })
