@@ -1,41 +1,49 @@
-import {useEffect, useState } from 'react';
+import {useEffect, useState } from 'react'
 import {useMetricsStore } from './store'
 import Dashboard from './Dashbroard'
 
-const BACKEND_URL = (import.meta as any).env?.VITE_BACKEND_URL || 'http://localhost:3000'
-const WS_URL = `${BACKEND_URL.replace(/^http/, 'ws')}/metrics/stream`
+const { 
+  VITE_WS_BASE_URL = 'ws://localhost:3000'
+} = (import.meta as any)?.env || {};
+const VITE_WS_URL = `${VITE_WS_BASE_URL}/metrics/stream`;
 
 export default function App() {
-  const setMetric = useMetricsStore((s) => s.setMetric)
-  const clear = useMetricsStore((s) => s.clear)
+  const setMetric = useMetricsStore((s: any) => s.setMetric)
+  const clear = useMetricsStore((s: any) => s.clear)
   const [connected, setConnected] = useState(false)
-  
   
   useEffect(() => {
     let ws: any = null
     let reconectTimer: any = null
     function connect() {
-      ws = new window.WebSocket(WS_URL);
+      if (!window?.WebSocket) {
+        throw new Error('Window webscoket not defined');
+      }
+      try {
+        ws = new window.WebSocket(VITE_WS_URL);
+      } catch (e) {
+        console.error(e);
+      }  
       ws.onopen = () => setConnected(true)
       ws.onclose = () => {
         setConnected(false);
         reconectTimer = setTimeout(connect, 2000);
       }
-      ws.onmessage = (e) => {
+      ws.onmessage = (e: any) => {
         try {
-          let msg = JSON.parse(e.data);
-          if(msg && msg.type === "metrics") setMetric(msg.data)
-          else if (msg && msg.type === "config") {
-            const setServices = useMetricsStore
-              .getState().setServices
-            setServices(msg.data.services || []);
+          const msg = JSON.parse(e.data);
+          if (msg?.type === "metrics") setMetric(msg.data)
+          else if (msg?.type === "config") {
+            useMetricsStore.getState().setServices(
+              msg.data?.services || []
+            );
           }
         } catch (e) {
           console.error(e)
         }
       }
     }
-    connect()
+    connect();
     return () => {
       if(ws) ws.close()
       if(reconectTimer) clearTimeout(reconectTimer)
