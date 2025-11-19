@@ -65,7 +65,8 @@ wss.on('connection',(ws: WebSocket)=>{
   ws.on('close', () => {
     active = false;
     console.log(
-        'Websocket client disconnected, clients size =', wss.clients.size
+      'Websocket client disconnected, clients size =', 
+      wss.clients.size
     )
   })
 
