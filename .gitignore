@@ -1,52 +1,11 @@
-.# Git ignore for Node.js projects and common editor/build artifacts
-# See https://git-scm.com/docs/gitignore for details
-
-# Node modules
 node_modules/
 **/node_modules/
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-logs/
-*.log
-
-# Runtime data
-pids/
-*.pid
-*.seed
-
-# Coverage directory
-coverage/
-.nyc_output/
-
-# Build output
-dist/
-build/
-out/
-.tmp/
-.next/
-.parcel-cache/
-.cache/
+**/dist/
 .vite/
 
-# Environment files
 .env
 .env.local
 .env.*.local
 
-# IDEs and editors
 .vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-.DS_Store
-
-# Misc
-*.tgz
-*.sql
-*.sqlite
